@@ -1,0 +1,6 @@
+{
+  "name": "SMART CLASS — Lớp Học Thông Minh",
+  "description": "Nền tảng quản lý lớp học số thế hệ mới tích hợp RBAC, điểm danh, bài tập, gradebook, công cụ giảng dạy, báo cáo và AI hỗ trợ.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

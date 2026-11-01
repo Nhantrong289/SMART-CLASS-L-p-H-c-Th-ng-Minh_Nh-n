@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User account and profile in the smart classroom system",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique user ID (UID from Firebase Auth)" },
+        "name": { "type": "string", "description": "Full display name" },
+        "email": { "type": "string", "description": "Email address" },
+        "role": { "type": "string", "enum": ["TEACHER", "STUDENT", "PARENT", "ADMIN"], "description": "User role in system" },
+        "avatar": { "type": "string", "description": "Portrait or avatar URL" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of account creation" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Class": {
+      "title": "Class",
+      "description": "Classroom entity created and managed by an authenticated teacher",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique class identifier" },
+        "name": { "type": "string", "description": "Class name, e.g. 10A1" },
+        "teacherUid": { "type": "string", "description": "UID of teacher who owns this class (matches request.auth.uid)" },
+        "createdAt": { "type": "string", "description": "Timestamp of class creation" },
+        "grade": { "type": "number", "description": "Grade level (e.g. 10, 11, 12)" },
+        "academicYear": { "type": "string", "description": "School year (e.g. 2025-2026)" },
+        "room": { "type": "string", "description": "Classroom room number or location" },
+        "subject": { "type": "string", "description": "Teaching subject" },
+        "code": { "type": "string", "description": "Join code for class" },
+        "homeroomTeacherId": { "type": "string", "description": "Homeroom teacher ID" },
+        "homeroomTeacherName": { "type": "string", "description": "Homeroom teacher display name" },
+        "studentCount": { "type": "number", "description": "Number of enrolled students" },
+        "attendanceRate": { "type": "number", "description": "Average attendance percentage" },
+        "status": { "type": "string", "enum": ["active", "archived"], "description": "Class active status" },
+        "description": { "type": "string", "description": "Optional class description" }
+      },
+      "required": ["id", "name", "teacherUid", "createdAt"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student record enrolled in a classroom, owned by the teacher",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique student identifier" },
+        "name": { "type": "string", "description": "Full student name" },
+        "classId": { "type": "string", "description": "Class ID to which the student belongs" },
+        "className": { "type": "string", "description": "Class name (e.g. 10A1)" },
+        "teacherUid": { "type": "string", "description": "UID of teacher who owns this student record" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "studentCode": { "type": "string", "description": "Student roll code (e.g. HS-0001)" },
+        "gender": { "type": "string", "enum": ["Nam", "Nữ"], "description": "Student gender" },
+        "dob": { "type": "string", "description": "Date of birth (YYYY-MM-DD)" },
+        "phone": { "type": "string", "description": "Student phone number" },
+        "parentName": { "type": "string", "description": "Parent full name" },
+        "parentPhone": { "type": "string", "description": "Parent contact phone number" },
+        "parentAvatar": { "type": "string", "description": "Parent portrait URL" },
+        "avatar": { "type": "string", "description": "Student portrait URL" },
+        "address": { "type": "string", "description": "Residential address" },
+        "group": { "type": "number", "description": "Group or team number in class" },
+        "attendanceRate": { "type": "number", "description": "Attendance percentage" },
+        "gpa": { "type": "number", "description": "Grade point average" },
+        "status": { "type": "string", "enum": ["active", "leave", "suspended"], "description": "Enrollment status" },
+        "conduct": { "type": "string", "description": "Conduct evaluation (Tốt, Khá, Trung bình)" }
+      },
+      "required": ["id", "name", "classId", "teacherUid", "createdAt"]
+    },
+    "Question": {
+      "title": "Question",
+      "description": "Question bank item conforming to Vietnam GDPT 2018 standards",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique question ID" },
+        "code": { "type": "string", "description": "Question code (e.g. TOAN10-001)" },
+        "subject": { "type": "string", "description": "Subject name" },
+        "grade": { "type": "string", "description": "Target grade level" },
+        "content": { "type": "string", "description": "Question content" },
+        "type": { "type": "string", "description": "Question type" },
+        "difficulty": { "type": "string", "description": "Difficulty level" },
+        "explanation": { "type": "string", "description": "Explanation text" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "content", "subject"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles stored upon Google / Firebase authentication"
+    },
+    "/classes/{classId}": {
+      "schema": "Class",
+      "description": "Classrooms owned by the teacher (filtered and secured by teacherUid)"
+    },
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Students belonging to classes owned by the teacher (filtered and secured by teacherUid)"
+    },
+    "/questions/{questionId}": {
+      "schema": "Question",
+      "description": "Curriculum questions in the Smart Question Bank"
+    }
+  }
+}
